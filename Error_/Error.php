@@ -32,7 +32,7 @@ class Error_ {
 	}
 
 	public function htmlRepresenation() {
-		$contrroller = new \Controllers\ControllerBase();
+		$contrroller = new \Controller\ControllerBase();
 		$args = [
 			'message'	=> $this->error." at ".$this->where,
 			'status'	=> $this->status

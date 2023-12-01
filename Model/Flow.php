@@ -1,6 +1,7 @@
 <?php
 
-namespace Models;
+namespace Model
+;
 
 use \Error_\Error_;
 

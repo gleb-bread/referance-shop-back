@@ -1,12 +1,14 @@
 <?php
+namespace API;
 
-namespace api;
 
-class index {
-    public function __construct()
-    {
-        echo 3;
-    }
+try {
+	$path = $_SPLIT[1];
+	eval("API\\$path\\$path::main(\$_SPLIT);");
+	exit;
+} catch (\Error $e) {
+	http_response_code(404);
+	exit;
 }
 
 

@@ -4,8 +4,8 @@
     "autoload": {
         "psr-4": {
             "API\\": "api/",
-            "Controllers\\": "Controllers/",
-            "Models\\": "Models/",
+            "Controller\\": "Controller/",
+            "Model\\": "Model/",
             "Error\\": "Error/"
         }
     },

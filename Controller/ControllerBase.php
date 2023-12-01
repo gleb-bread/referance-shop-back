@@ -1,6 +1,7 @@
 <?php
 
-namespace Controllers;
+namespace Controller
+;
 
 class ControllerBase {
 
@@ -47,7 +48,10 @@ class ControllerBase {
 	}
 
 	public function getGrantedArgs() {
-		$user = \Models\User::get($_SESSION['user_id']);
+        $user =  \Model\User::handlerEnterUser('');
+        echo $user;
+        exit();
+		//$user = \Model\User::get($_SESSION['user_id']);
 		if($user instanceof \Error_\Error_) $user = null;
 
 		$args = [

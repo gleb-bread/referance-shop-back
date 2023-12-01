@@ -1,11 +1,13 @@
 <?php
 
-namespace Models;
+namespace Model
+;
 
 use \Error_\Error_;
 
 /**
- * Base class for models
+ * Base class for Model
+
  */
 class Model implements IModel{
 	// ===STATIC===
