@@ -3,7 +3,10 @@
     
     "autoload": {
         "psr-4": {
-            "api\\": "api/"
+            "API\\": "api/",
+            "Controllers\\": "Controllers/",
+            "Models\\": "Models/",
+            "Error\\": "Error/"
         }
     },
     "authors": [
