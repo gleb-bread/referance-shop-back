@@ -1,0 +1,17 @@
+{
+    "name": "glebivanov/referance-shop-back",
+    
+    "autoload": {
+        "psr-4": {
+            "api\\": "api/"
+        }
+    },
+    "authors": [
+        {
+            "name": "gleb-bread",
+            "email": "glebhets123@gmail.com"
+        }
+    ],
+    
+    "require": {}
+}
