@@ -15,6 +15,7 @@ class Users extends \API\AController {
 	}
 
 	protected static function get() {
+		echo self::$user->handlerEnterUser();
 
 		switch(self::$_SPLIT[2]) {
 			case NULL: 

@@ -6,7 +6,8 @@
             "API\\": "api/",
             "Controller\\": "Controller/",
             "Model\\": "Model/",
-            "Error\\": "Error/"
+            "Error\\": "Error/",
+            "Env\\": "Env/"
         }
     },
     "authors": [

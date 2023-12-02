@@ -6,12 +6,14 @@ class Env {
 	private static $isSet = false;
 
 	public static ?string $ver = 'api';
+	public static ?bool $modeDevelopen;
 	public static ?string $hash;
 
 	public static function setAll() {
 		if(!self::$isSet) {
 			require 'init.php';
 			
+			self::$modeDevelopen = $modeDevelopen;
 			self::$hash = self::generateCode();
 
 			self::$isSet = true;

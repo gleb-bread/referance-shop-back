@@ -1,6 +1,5 @@
 <?php
 
-require 'routing.php';
-
+include 'routing.php';
 
 ?>
