@@ -5,7 +5,7 @@ namespace Env;
 class Env {
 	private static $isSet = false;
 
-	public static ?string $ver = 'api';
+	public static ?string $ver = 'www';
 	public static ?bool $modeDevelopen;
 	public static ?string $hash;
 

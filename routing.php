@@ -5,14 +5,11 @@ include __DIR__ . '/vendor/autoload.php';
  
 include 'init.php';
 
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-
 if(Env\Env::$modeDevelopen){
     include 'error.php';
 }
 
-$fn = ($_SPLIT[0]) ? (file_exists($ver.'/'.$_SPLIT[0].'/index.php') ? $ver.'/'.$_SPLIT[0].'/index.php' : $ver.'/'.$_SPLIT[0].'.php') : $ver.'/index.php';
+$fn = ($_SPLIT[0]) ? (file_exists(Env\Env::$ver . '/'.$_SPLIT[0].'/index.php') ? Env\Env::$ver . '/'.$_SPLIT[0].'/index.php' : Env\Env::$ver . '/'.$_SPLIT[0].'.php') : Env\Env::$ver . '/index.php';
 
 if(file_exists($fn)){
 	require $fn;
