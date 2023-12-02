@@ -46,9 +46,9 @@ class User extends Model {
 		return parent::get($id);
 	}
 
-	public static function getAllWhereIn(string $field, array $values){
+	public static function getByField(string $field, array $values){
 
-		$user = parent::getAllWhereIn($field, $values);
+		$user = parent::getByField($field, $values);
 		
 		if(!count($user)){
 			return false;

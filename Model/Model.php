@@ -40,6 +40,27 @@ class Model implements IModel{
 		return static::getFrom($row);
 	}
 
+	public static function getByField(string $field, array $values) {
+		if(!in_array($field, static::$fields, true))
+			return new Error_("Field '$field' is not in the list of fields", static::class."@getAllWhereIn");
+
+		$inStatementArr = self::getAllForInStatement($values, static::typeOfField($field));
+		$inStatement = $inStatementArr['placeholders'];
+		$types = $inStatementArr['types'];
+		$values = $inStatementArr['values'];
+
+		$query = "SELECT * FROM ".static::$table. " WHERE  $field = $inStatement;";
+
+		$result = self::getStatementResultSelect($query, $types, $values, "getByField");
+		if($result instanceof Error_) return $result;
+
+		$objects = [];
+		while($row=$result->fetch_assoc())
+			$objects[] = static::getFrom($row);
+		
+		return $objects;
+	}
+
 	protected static function checkNotEmpty($request, $val) {
 		return isset($request[$val]) AND $request[$val] !== '' AND !is_null($request[$val]);
 	}

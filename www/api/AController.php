@@ -13,14 +13,14 @@ class AController {
 		static::$_SPLIT = $_SPLIT;
 		$data = self::getParams();
 
-		$data['user_token'] = 'ssdvsdfsdfsdfdsf';
+		echo json_encode($data); exit;
 
-		$user = \Model\User::getAllWhereIn('user_token', [$data['user_token']]);
+		$user = \Model\User::getByField('user_token', [$data['user_token']]);
 		if($user instanceof \Error_\Error_) self::unauthorized();
 		if(!$user) $user = \Model\User::create($data);
 		if($user instanceof \Error_\Error_) self::badRequest($user->stringReturn());
 
-		static::$user = \Model\User::get($user);
+		static::$user = \Model\User::get($user->user_id);
 		if(!static::$user->user_id) self::unauthorized();
 
 		static::$method = $_SERVER["REQUEST_METHOD"];
