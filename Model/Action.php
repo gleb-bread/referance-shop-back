@@ -32,6 +32,10 @@ class Action extends Model {
 		return parent::get($id);
 	}
 
+    public static function getAll(array $params=[]) {
+		return parent::getAll();
+	}
+
 	public static function __init__() {
 		self::$table = "action";
 		self::$prefix = "action_";

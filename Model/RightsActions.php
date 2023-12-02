@@ -32,6 +32,10 @@ class RightsActions extends Model {
 		return parent::get($id);
 	}
 
+    public static function getAll(array $params=[]) {
+		return parent::getAll();
+	}
+
     public static function getWhereClause($filters)
     {
         return parent::getWhereClause($filters);

@@ -31,6 +31,10 @@ class Right extends Model {
 		return parent::get($id);
 	}
 
+	public static function getAll(array $params=[]) {
+		return parent::getAll();
+	}
+
 	public static function __init__() {
 		self::$table = "rights";
 		self::$prefix = "right_";
