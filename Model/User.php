@@ -1,7 +1,6 @@
 <?php
 
-namespace Model
-;
+namespace Model;
 
 use API\users\users;
 use Error_\Error_;
