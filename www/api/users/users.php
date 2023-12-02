@@ -39,6 +39,7 @@ class users extends \API\AController {
 			"user_id"				=> $user->user_id,
 			"user_phone"			=> $user->user_phone,
 			"user_email"			=> $user->user_email,
+			"user_token"			=> $user->user_token,
 		];
 
 		echo json_encode($data);
