@@ -57,7 +57,7 @@ class Model implements IModel{
 		$objects = [];
 		while($row=$result->fetch_assoc())
 			$objects[] = static::getFrom($row);
-		
+
 		return $objects;
 	}
 
@@ -100,10 +100,9 @@ class Model implements IModel{
 		$query .= implode(",\n ", $place_holders);
 
 		$result = static::getStatementResultInsert($query, $types, $values, "create");
-		if($result instanceof Error_) return $result;
 
-		if(is_bool($result)) return $result;
-		return static::get($result);
+
+		return $result;
 	}
 
 	/**

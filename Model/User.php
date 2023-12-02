@@ -35,11 +35,11 @@ class User extends Model {
 	
 
 	public static function create($data) {
-		echo parent::create($data);
+		return parent::create($data);
 	}
 
     public static function handlerEnterUser($user_token){
-       echo parent::get($user_token);
+       return parent::get($user_token);
     }
 
 	public static function get($id) {
