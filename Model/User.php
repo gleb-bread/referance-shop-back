@@ -3,6 +3,9 @@
 namespace Model
 ;
 
+use API\users\users;
+use Error_\Error_;
+
 class User extends Model {
 
 	// ===STATIC===
@@ -32,10 +35,10 @@ class User extends Model {
 	
 
 	public static function create($data) {
-		return null;
+		echo parent::create($data);
 	}
 
-    public static function handlerEnterUser($user_token=''){
+    public static function handlerEnterUser($user_token){
        echo parent::get($user_token);
     }
 
@@ -43,10 +46,33 @@ class User extends Model {
 		return parent::get($id);
 	}
 
+	public static function getAllWhereIn(string $field, array $values){
+
+		$user = parent::getAllWhereIn($field, $values);
+		
+		if(!count($user)){
+			return false;
+		} else {
+			return $user[0];
+		}
+
+		return $user;
+	}
+
 	public static function getAll($filters=[]) {
 		$filters['order_clause'] = '';
 		$filters['limit'] = 100;
 		return parent::getAll($filters);
+	}
+
+
+
+	private static function getUpdateParams(array $request) {
+		$data = [];
+		if(parent::checkNotEmpty($request, 'dir_status'))					$data['dir_status'] = $request['dir_status'];
+		if(parent::checkNotEmpty($request, 'dir_file'))						$data['dir_file'] = $request['dir_file'];
+
+		return $data;
 	}
 
 	public static function __init__() {

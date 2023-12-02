@@ -3,7 +3,7 @@ namespace API;
 
 try {
 	$path = $_SPLIT[1];
-	eval("API\\$path\\$path::_main(\$_SPLIT);");
+	eval("API\\$path\\$path::main(\$_SPLIT);");
 	exit;
 } catch (\Error $e) {
 	http_response_code(404);

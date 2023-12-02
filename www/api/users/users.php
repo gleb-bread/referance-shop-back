@@ -1,28 +1,24 @@
 <?php
 
-namespace API\Users;
+namespace API\users;
 
 use \Error_\Error_;
 
-class Users extends \API\AController {
+class users extends \API\AController {
 	protected static $_SPLIT;
 	protected static \Model\User $user;
 	protected static $method;
 	protected static $supportedMethods = ['GET', 'PATCH'];
 
 	protected static function _main() {
-		self::{self::$method}();
+		if(self::$method == "GET") self::get();
+		if(self::$method == "PATCH") self::patch();
+		
+		self::unsuported();
 	}
 
 	protected static function get() {
-		echo self::$user->handlerEnterUser();
-
-		switch(self::$_SPLIT[2]) {
-			case NULL: 
-				self::getUser();
-			default:
-				self::unsuported();
-		}
+		echo self::getUser();
 	}
 
     private function getRow(){

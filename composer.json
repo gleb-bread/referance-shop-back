@@ -3,7 +3,7 @@
     
     "autoload": {
         "psr-4": {
-            "API\\": "api/",
+            "API\\": "www/api/",
             "Controller\\": "Controller/",
             "Model\\": "Model/",
             "Error\\": "Error/",

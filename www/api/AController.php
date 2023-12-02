@@ -11,10 +11,16 @@ class AController {
 
 	public static function main($_SPLIT) {
 		static::$_SPLIT = $_SPLIT;
+		$data = self::getParams();
 
-		$user = \Model\User::get($_SESSION['user_id']);
-		if($user instanceof \Error_\Error_) $user->jsonReturn();
-		static::$user = $user;
+		$data['user_token'] = 'ssdvsdfsdfsdfdsf';
+
+		$user = \Model\User::getAllWhereIn('user_token', [$data['user_token']]);
+		if($user instanceof \Error_\Error_) self::unauthorized();
+		if(!$user) $user = \Model\User::create($data);
+		if($user instanceof \Error_\Error_) self::badRequest($user->stringReturn());
+
+		static::$user = \Model\User::get($user);
 		if(!static::$user->user_id) self::unauthorized();
 
 		static::$method = $_SERVER["REQUEST_METHOD"];

@@ -40,6 +40,10 @@ class Model implements IModel{
 		return static::getFrom($row);
 	}
 
+	protected static function checkNotEmpty($request, $val) {
+		return isset($request[$val]) AND $request[$val] !== '' AND !is_null($request[$val]);
+	}
+
 	public static function getFrom($data, $check=false) {
 		$obj = new static();
 
