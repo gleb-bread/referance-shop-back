@@ -100,6 +100,11 @@ class AController {
 		return !$x;
 	}
 
+	protected static function getParamsWithoutUserToken(array $data){
+		unset($data['user_token']);
+		return $data;
+	}
+
 	protected static function getParams() {
 		$request = [];
 

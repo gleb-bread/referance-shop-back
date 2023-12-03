@@ -101,7 +101,6 @@ class Model implements IModel{
 
 		$result = static::getStatementResultInsert($query, $types, $values, "create");
 
-
 		return $result;
 	}
 

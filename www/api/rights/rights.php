@@ -14,11 +14,18 @@ class rights extends \API\AController {
 	protected static $supportedMethods = ['GET', 'PATCH', 'POST'];
 
 	protected static function _main() {
-		if(self::$method == "GET") self::get();
-		if(self::$method == "PATCH") self::patch();
-        if(self::$method == "POST") self::post();
-		
-		self::unsuported();
+		$method = self::$method;
+
+        switch(self::$_SPLIT[2]) {
+			case "name":
+				name::$method();
+				exit;
+			case "actions":
+				actions::$method();
+				exit;
+			default:
+				self::totalActions();
+		}
 	}
 
 	protected static function get() {
@@ -33,10 +40,19 @@ class rights extends \API\AController {
 
     }
 
+    private function totalActions(){
+        if(self::$method == "GET") self::get();
+		if(self::$method == "PATCH") self::patch();
+        if(self::$method == "POST") self::post();
+
+        self::unsuported();
+    }
+
     private static function getRights(){
         $rights = self::$right::getAll();
         $actions = self::$action::getAll();
         $rightAction = self::$rightAction::getAll();
+        
         $rightAction = [];
 
 
