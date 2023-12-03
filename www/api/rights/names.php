@@ -8,10 +8,15 @@ class names extends rights {
 
 	protected static function get() {
 		if(!self::checkParam(self::$_SPLIT[3])){
-		    echo json_encode(\Model\Right::getAll());
+            $rights = \Model\Right::getAll();
+            if($rights instanceof Error_) self::internalServerError();
+            $rights = array_values($rights);
+		    echo json_encode($rights);
             exit;
         } else {
-            echo json_encode(\Model\Right::get(self::$_SPLIT[3]));
+            $right = \Model\Right::get(self::$_SPLIT[3]);
+            if($right instanceof Error_) self::badRequest();
+            echo json_encode($right);
             exit;
         }
 	}

@@ -20,8 +20,8 @@ class Action extends Model {
 	// ============
 
 	public $action_id;
-	public $action_name;
-    public $action_short_name;
+	public $action_title;
+    public $action_short_title;
 	
 
 	public static function create($data) {
@@ -37,7 +37,7 @@ class Action extends Model {
 	}
 
 	public static function __init__() {
-		self::$table = "action";
+		self::$table = "actions";
 		self::$prefix = "action_";
 		self::$identifier = "action_id";
 		self::$numbers_fields = [
