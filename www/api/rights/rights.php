@@ -17,8 +17,8 @@ class rights extends \API\AController {
 		$method = self::$method;
 
         switch(self::$_SPLIT[2]) {
-			case "name":
-				name::$method();
+			case "names":
+				names::$method();
 				exit;
 			case "actions":
 				actions::$method();

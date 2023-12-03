@@ -4,13 +4,15 @@ namespace API\rights;
 
 use \Error_\Error_;
 
-class name extends rights {
-    
+class names extends rights {
+
 	protected static function get() {
-		if(!self::checkParam(self::$_SPLIT[2])){
-		    echo self::$action::getAll();
+		if(!self::checkParam(self::$_SPLIT[3])){
+		    echo json_encode(\Model\Right::getAll());
+            exit;
         } else {
-            echo self::$action::get(self::$_SPLIT[2]);
+            echo json_encode(\Model\Right::get(self::$_SPLIT[3]));
+            exit;
         }
 	}
 
