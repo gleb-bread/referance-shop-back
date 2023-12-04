@@ -27,7 +27,7 @@ class ModelParser implements IModel{
 	const CURRENT_TIMESTAMP = -1000000000;
 
 	public $error;
-	protected static \mysqli $link;
+	protected static \mysqli $linkBD;
 
 	public static function get($id) {
 		$query = "SELECT * FROM `".static::$table."` WHERE `".static::identifier()."`=?";
@@ -255,15 +255,15 @@ class ModelParser implements IModel{
 	}
 
 	public static function escapeString(string $string) {
-		return mysqli_real_escape_string(self::$link, $string);
+		return mysqli_real_escape_string(self::$linkBD, $string);
 	}
 
 	public static function setConnection(\mysqli $connection) {
-		self::$link = $connection;
+		self::$linkBD = $connection;
 	}
 
 	public static function getConnection() {
-		return self::$link;
+		return self::$linkBD;
 	}
 
 	public static function table() {
@@ -325,7 +325,7 @@ class ModelParser implements IModel{
 	public static function currentTimestamp() {
 		$query = "SELECT CURRENT_TIMESTAMP() AS `timestamp`;";
 
-		if ($sql_query = mysqli_query(self::$link, $query)) {
+		if ($sql_query = mysqli_query(self::$linkBD, $query)) {
 			if ($result = mysqli_fetch_assoc($sql_query)) {
 				return $result['timestamp'];
 			}
@@ -346,11 +346,11 @@ class ModelParser implements IModel{
 
 	public static function exists($id) {
 		$query = "SELECT COUNT(*) AS count FROM `".
-			mysqli_real_escape_string(self::$link, static::$table)."` WHERE ".
-			mysqli_real_escape_string(self::$link, static::$prefix.'id')."=".
-			mysqli_real_escape_string(self::$link, $id).";";
+			mysqli_real_escape_string(self::$linkBD, static::$table)."` WHERE ".
+			mysqli_real_escape_string(self::$linkBD, static::$prefix.'id')."=".
+			mysqli_real_escape_string(self::$linkBD, $id).";";
 
-		if($sql_query=mysqli_query(self::$link, $query)) {
+		if($sql_query=mysqli_query(self::$linkBD, $query)) {
 			if ($row=mysqli_fetch_assoc($sql_query)) {
 				return $row['count'] > 0;
 			}
@@ -364,7 +364,7 @@ class ModelParser implements IModel{
 			DATE(DATE_SUB(CURRENT_TIMESTAMP, INTERVAL 1 MONTH)) AS date_from,
 			DATE(CURRENT_TIMESTAMP) AS date_till;";
 		
-		$sql_query = mysqli_query(self::$link, $query);
+		$sql_query = mysqli_query(self::$linkBD, $query);
 		if($sql_query) {
 			$row = mysqli_fetch_assoc($sql_query);
 			if($row) return $row;
@@ -375,7 +375,7 @@ class ModelParser implements IModel{
 	}
 	
 	public static function init(\mysqli $link) {
-		self::$link = $link;
+		self::$linkBD = $link;
 	}
 
 	/**
@@ -385,7 +385,7 @@ class ModelParser implements IModel{
 	 * 
 	 */
 	public static function getLink() {
-		return self::$link;
+		return self::$linkBD;
 	}
 
 	public static function typeOfField($field) {
@@ -496,23 +496,23 @@ class ModelParser implements IModel{
 	 * 
 	 */
 	public static function getStatementResult(string $query, string $types, array $values, string $from='getStatementResult', string $type="SELECT") {
-		$stmt = mysqli_prepare(self::$link, $query);
+		$stmt = mysqli_prepare(self::$linkBD, $query);
 		if(!$stmt)
-			return new Error_('Prepare error: ' . mysqli_error(self::$link), static::class."::".$from, 500);
+			return new Error_('Prepare error: ' . mysqli_error(self::$linkBD), static::class."::".$from, 500);
 
 		$stmt->bind_param($types, ...$values);
 		$exec_res = $stmt->execute();
 		if($exec_res) {
 
 			if ($type=='INSERT') {
-				$inserted_id = mysqli_insert_id(self::$link);
+				$inserted_id = mysqli_insert_id(self::$linkBD);
 				$rows_affected = $stmt->affected_rows;
 				mysqli_stmt_close($stmt);
 				return $inserted_id===0?($rows_affected!==0):$inserted_id;
 			}
 
 			if ($type=='UPDATE') {
-				$rows_affected = mysqli_affected_rows(self::$link);
+				$rows_affected = mysqli_affected_rows(self::$linkBD);
 				mysqli_stmt_close($stmt);
 				return $rows_affected;
 			}
@@ -567,9 +567,9 @@ class ModelParser implements IModel{
 		$stmt = self::prepareBindExecute($query, $types, $values, $from);
 		if($stmt instanceof Error_) return $stmt;
 
-		$inserted_id = mysqli_insert_id(self::$link);
+		$inserted_id = mysqli_insert_id(self::$linkBD);
 		$rows_affected = $stmt->affected_rows;
-		if($rows_affected===0) return new Error_('Nothing was inserted '.mysqli_error(self::$link), static::class."::getStatementResultInsert", 500);
+		if($rows_affected===0) return new Error_('Nothing was inserted '.mysqli_error(self::$linkBD), static::class."::getStatementResultInsert", 500);
 
 		mysqli_stmt_close($stmt);
 		return $inserted_id===0?($rows_affected!==0):$inserted_id;
@@ -592,7 +592,7 @@ class ModelParser implements IModel{
 		$stmt = self::prepareBindExecute($query, $types, $values, $from);
 		if($stmt instanceof Error_) return $stmt;
 
-		$rows_affected = mysqli_affected_rows(self::$link);
+		$rows_affected = mysqli_affected_rows(self::$linkBD);
 		mysqli_stmt_close($stmt);
 		return $rows_affected;
 	}
@@ -609,9 +609,9 @@ class ModelParser implements IModel{
 	 * 
 	 */
 	private static function prepareBindExecute(string $query, string $types, array $values, string $from='prepareBindExecute') {
-		$stmt = mysqli_prepare(self::$link, $query);
+		$stmt = mysqli_prepare(self::$linkBD, $query);
 		if(!$stmt)
-			return new Error_('Prepare error: ' . mysqli_error(self::$link), $from, 500);
+			return new Error_('Prepare error: ' . mysqli_error(self::$linkBD), $from, 500);
 
 		$stmt->bind_param($types, ...$values);
 		$exec_res = $stmt->execute();
@@ -647,8 +647,8 @@ class ModelParser implements IModel{
 	}
 
 	public static function setFields($table=false) {
-		$query = "DESCRIBE `".mysqli_real_escape_string(self::$link, ($table?$table:static::$table))."`;";
-		if ($sql_query = mysqli_query(self::$link, $query)) {
+		$query = "DESCRIBE `".mysqli_real_escape_string(self::$linkBD, ($table?$table:static::$table))."`;";
+		if ($sql_query = mysqli_query(self::$linkBD, $query)) {
 			$fields = [];
 			while ($row = mysqli_fetch_assoc($sql_query)) {
 				$fields[] = $row['Field'];
@@ -656,7 +656,7 @@ class ModelParser implements IModel{
 			return $fields;
 		}
 
-		$error = new Error_('Unable to set fields: '.mysqli_error(self::$link), static::class."::setFields", 500);
+		$error = new Error_('Unable to set fields: '.mysqli_error(self::$linkBD), static::class."::setFields", 500);
 		$error->jsonReturn();
 	}
 }
