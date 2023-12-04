@@ -8,7 +8,7 @@ use \Error_\Error_;
  * Base class for Model
 
  */
-class Model implements IModel{
+class ModelParser implements IModel{
 	// ===STATIC===
 	protected static $table;
 	protected static $prefix;
@@ -661,4 +661,4 @@ class Model implements IModel{
 	}
 }
 
-Model::init(\Env\Link::get());
+ModelParser::init(\Env\ParserLink::get());

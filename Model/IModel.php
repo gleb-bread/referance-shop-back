@@ -1,7 +1,6 @@
 <?php
 
-namespace Model
-;
+namespace Model;
 
 interface IModel {
 	public static function create(array $data);
