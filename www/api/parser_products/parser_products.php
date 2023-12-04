@@ -14,7 +14,7 @@ class parser_products extends \API\AController {
 		
 		self::unsuported();
 	}
-
+	//TODO почему то не работает вторая модель
 	protected static function get() {
 		$data = self::getParams();
 		$data = self::getParamsWithoutUserToken($data);
