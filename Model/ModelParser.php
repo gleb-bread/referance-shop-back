@@ -77,6 +77,30 @@ class ModelParser implements IModel{
 		return $obj;
 	}
 
+	public static function getUnicFieldValues(array $fields){
+		$query = "SELECT DISTINCT";
+
+		foreach($fields as $field){
+			if(end($fields) != $field)	$query = $query . " `" . $field . "`,";
+			if(end($fields) === $field)	$query = $query . " `" . $field . "`";
+		}
+
+		$query = $query . " " . "FROM `".static::$table."`";
+
+		$categories = mysqli_query(self::$linkBD, $query);
+
+		$result = [];
+
+		while ($row = $categories->fetch_row()) {
+			if(!is_array($result[$row[0]])){ $result[$row[0]] = []; }
+			array_push($result[$row[0]], $row[1]);
+		}
+
+		if($result) return $result ;
+		return new Error_('Result failure: ' . $categories, static::class."::category", 500);
+
+	}
+
 	public static function create(array $data) {
 		if(!empty(array_diff(static::$required, array_keys($data))))
 			return new Error_("Required parameters are not gotten", static::class."@create", 500);
