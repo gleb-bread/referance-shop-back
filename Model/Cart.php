@@ -4,7 +4,7 @@ namespace Model;
 
 use Error_\Error_;
 
-class Right extends Model {
+class Cart extends Model {
 
 	// ===STATIC===
 	protected static $table;
@@ -19,8 +19,12 @@ class Right extends Model {
 	protected static $identifier;
 	// ============
 
-	public $right_id;
-	public $right_title;
+	public $cart_id;
+	public $cart_uid;
+    public $cart_product_id;
+    public $cart_is_parsing;
+    public $cart_count;
+    public $cart_date;
 	
 
 	public static function create($data) {
@@ -36,13 +40,14 @@ class Right extends Model {
 	}
 
 	public static function __init__() {
-		self::$table = "rights";
-		self::$prefix = "right_";
-		self::$identifier = "right_id";
+		self::$table = "cart";
+		self::$prefix = "cart_";
+		self::$identifier = "cart_id";
 		self::$float_fields = [];
 		self::$json_fields = [];
 		self::$numbers_fields = [
-			'right_id',
+			'cart_id', 'cart_uid', 'cart_product_id', 
+            'cart_is_parsing', 'cart_count'
 		];
 		self::$fields = self::setFields();
 	}
@@ -50,8 +55,8 @@ class Right extends Model {
 }
 
 try {
-	Right::__init__([]);
+	Cart::__init__([]);
 } catch (\Exception $e) {
-	new \Error_\Error_("Could not initialize Right. sql error:".mysqli_error(Right::getLink()), "\Model\Right", 500, true);
+	new \Error_\Error_("Could not initialize Cart. sql error:".mysqli_error(Cart::getLink()), "\Model\Cart", 500, true);
 	exit;
 }

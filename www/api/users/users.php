@@ -20,8 +20,8 @@ class users extends \API\AController {
 	protected static function get() {
 		echo self::getUser();
 	}
-
-    private function getRow(){
+	
+    private static function getRow(){
         $user = self::$user;
 
         $data = [
@@ -32,7 +32,7 @@ class users extends \API\AController {
 		exit;
     }
 
-	private function getUser() {
+	private static function getUser() {
 		$user = self::$user;
 
 		$data = [

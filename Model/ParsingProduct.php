@@ -81,6 +81,7 @@ class ParsingProduct extends ModelParser {
         self::$table = "all_products";
         self::$prefix = "";
         self::$identifier = "id";
+		self::$json_fields = [];
         self::$numbers_fields = [
             'id', 'check_invalide_links_views', 'price',
             'bitrix_views'

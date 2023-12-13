@@ -7,7 +7,7 @@ use Exception;
 
 class images extends parser_products {
 
-	protected static function get() {
+	public static function get() {
         $listCategory = \Model\ParsingProduct::getUnicFieldValues(['category']);
         if($listCategory instanceof Error_) return self::internalServerError();
 
@@ -16,9 +16,8 @@ class images extends parser_products {
         foreach($currectArray as $category){
             $currectProductList = \Model\ParsingProduct::getAll(self::getFilterList($category));
             $currectProductList = array_values($currectProductList);
-
             if(is_null($currectProductList[0]->images) || empty($currectProductList[0]->images)){
-                $result[$category] = self::getImg($currectProductList[0]['id'] + 1)['img1'];
+                $result[$category] = self::getImg($currectProductList[0]->id + 1)->img1;
             } else {
                 try{
                     $images = json_decode($currectProductList[0]->images);
@@ -29,7 +28,6 @@ class images extends parser_products {
             }
 
         }
-
         
         if(empty($result) || is_null($result)) return self::internalServerError();
 
@@ -37,7 +35,7 @@ class images extends parser_products {
         exit;
     }
 
-    private function getImg($id){
+    private static function getImg($id){
         $product = \Model\ParsingProduct::get($id);
 
         if(!is_null($product->images) && !empty($product->images)){
@@ -47,7 +45,8 @@ class images extends parser_products {
         }
     }
 
-    private function getFilterList($categoryName){
+    private static function getFilterList($categoryName){
+        
         $data = [
             'limit'     => 1,
             'category'  => $categoryName,
@@ -57,4 +56,3 @@ class images extends parser_products {
     }
 }
 
-?>

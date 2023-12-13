@@ -40,6 +40,8 @@ class Action extends Model {
 		self::$table = "actions";
 		self::$prefix = "action_";
 		self::$identifier = "action_id";
+		self::$float_fields = [];
+		self::$json_fields = [];
 		self::$numbers_fields = [
 			'action_id',
 		];

@@ -78,6 +78,8 @@ class User extends Model {
 		self::$table = "users";
 		self::$prefix = "user_";
 		self::$identifier = "user_id";
+		self::$float_fields = [];
+		self::$json_fields = [];
 		self::$numbers_fields = [
 			'user_id','user_ban'
 		];

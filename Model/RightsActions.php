@@ -45,6 +45,8 @@ class RightsActions extends Model {
 		self::$table = "rights_action";
 		self::$prefix = "right_";
 		self::$identifier = "right_id";
+		self::$float_fields = [];
+		self::$json_fields = [];
 		self::$numbers_fields = [
 			'right_id', 'right_sign', 'right_action_id'
 		];

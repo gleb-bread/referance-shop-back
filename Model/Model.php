@@ -42,7 +42,7 @@ class Model implements IModel{
 	public static function getByField(string $field, array $values) {
 		if(!in_array($field, static::$fields, true))
 			return new Error_("Field '$field' is not in the list of fields", static::class."@getAllWhereIn");
-
+			
 		$inStatementArr = self::getAllForInStatement($values, static::typeOfField($field));
 		$inStatement = $inStatementArr['placeholders'];
 		$types = $inStatementArr['types'];
@@ -52,11 +52,12 @@ class Model implements IModel{
 
 		$result = self::getStatementResultSelect($query, $types, $values, "getByField");
 		if($result instanceof Error_) return $result;
+		
 
 		$objects = [];
 		while($row=$result->fetch_assoc())
-			$objects[] = static::getFrom($row);
-
+			$objects[] = static::getFrom($row); 
+		
 		return $objects;
 	}
 
@@ -78,8 +79,8 @@ class Model implements IModel{
 	}
 
 	public static function create(array $data) {
-		if(!empty(array_diff(static::$required, array_keys($data))))
-			return new Error_("Required parameters are not gotten", static::class."@create", 500);
+	//	if(!empty(array_diff(static::$required, array_keys($data))))
+	//		return new Error_("Required parameters are not gotten", static::class."@create", 500);
 
 		$types = "";
 		$values = [];

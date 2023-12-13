@@ -4,7 +4,7 @@ namespace Model;
 
 use Error_\Error_;
 
-class Right extends Model {
+class Order extends Model {
 
 	// ===STATIC===
 	protected static $table;
@@ -19,8 +19,18 @@ class Right extends Model {
 	protected static $identifier;
 	// ============
 
-	public $right_id;
-	public $right_title;
+	public $order_id;
+	public $order_address;
+    public $order_uid;
+    public $order_status;
+    public $order_substatus;
+    public $order_comment;
+    public $order_comment_disabled;
+    public $order_type_disabled;
+    public $order_date;
+    public $order_price;
+    public $order_discount;
+    public $order_price_view;
 	
 
 	public static function create($data) {
@@ -36,13 +46,15 @@ class Right extends Model {
 	}
 
 	public static function __init__() {
-		self::$table = "rights";
-		self::$prefix = "right_";
-		self::$identifier = "right_id";
-		self::$float_fields = [];
+		self::$table = "orders";
+		self::$prefix = "order_";
+		self::$identifier = "order_id";
+		self::$float_fields = [
+            'order_discount', 'order_price_view'
+        ];
 		self::$json_fields = [];
 		self::$numbers_fields = [
-			'right_id',
+			'order_id', 'order_uid', 'order_price'
 		];
 		self::$fields = self::setFields();
 	}
@@ -50,8 +62,8 @@ class Right extends Model {
 }
 
 try {
-	Right::__init__([]);
+	Order::__init__([]);
 } catch (\Exception $e) {
-	new \Error_\Error_("Could not initialize Right. sql error:".mysqli_error(Right::getLink()), "\Model\Right", 500, true);
+	new \Error_\Error_("Could not initialize Order. sql error:".mysqli_error(Order::getLink()), "\Model\Order", 500, true);
 	exit;
 }
