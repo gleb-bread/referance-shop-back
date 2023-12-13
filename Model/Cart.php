@@ -25,6 +25,11 @@ class Cart extends Model {
     public $cart_is_parsing;
     public $cart_count;
     public $cart_date;
+    public $cart_status_id;
+    public $cart_comment;
+    public $cart_order_id;
+    public $cart_archive;
+    public $cart_date_update_archive;
 	
 
 	public static function create($data) {
@@ -39,6 +44,10 @@ class Cart extends Model {
 		return parent::getAll();
 	}
 
+    public static function getCount(array $params){
+        return parent::count($params);
+    }
+
 	public static function __init__() {
 		self::$table = "cart";
 		self::$prefix = "cart_";
@@ -47,7 +56,8 @@ class Cart extends Model {
 		self::$json_fields = [];
 		self::$numbers_fields = [
 			'cart_id', 'cart_uid', 'cart_product_id', 
-            'cart_is_parsing', 'cart_count'
+            'cart_is_parsing', 'cart_count', 'cart_status_id',
+            'cart_order_id', 'cart_archive',
 		];
 		self::$fields = self::setFields();
 	}

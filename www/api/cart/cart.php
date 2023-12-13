@@ -19,7 +19,18 @@ class cart extends \API\AController {
 	}
 
 	protected static function get() {
-		echo 1; exit;
+		$userId = self::$user->user_id;
+        if($userId instanceof Error_) self::internalServerError();
+
+        $data = self::getParams();
+        $data = self::getParamsWithoutUserToken($data);
+        $data['cart_uid'] = $userId;
+
+        $result = \Model\Cart::getAll($data);
+        if($result instanceof Error_) self::badRequest();
+
+        echo json_encode($result);exit;
+
 	}
 
     protected static function post(){

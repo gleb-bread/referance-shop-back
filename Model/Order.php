@@ -22,11 +22,11 @@ class Order extends Model {
 	public $order_id;
 	public $order_address;
     public $order_uid;
-    public $order_status;
-    public $order_substatus;
+    public $order_status_id;
+    public $order_substatus_id;
     public $order_comment;
     public $order_comment_disabled;
-    public $order_type_disabled;
+    public $order_type_disabled_id;
     public $order_date;
     public $order_price;
     public $order_discount;
@@ -54,7 +54,8 @@ class Order extends Model {
         ];
 		self::$json_fields = [];
 		self::$numbers_fields = [
-			'order_id', 'order_uid', 'order_price'
+			'order_id', 'order_uid', 'order_price',
+            'order_status_id', 'order_substatus_id', 'order_type_disabled_id'
 		];
 		self::$fields = self::setFields();
 	}
