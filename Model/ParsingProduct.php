@@ -68,6 +68,8 @@ class ParsingProduct extends ModelParser {
     public $date_add;
     public $date_edit;
     public $bitrix_views;
+    //adding at request fields
+    public $count_cart;
 
     public static function get($id) {
         return parent::get($id);

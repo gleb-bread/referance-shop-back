@@ -29,7 +29,33 @@ class cart extends \API\AController {
         $result = \Model\Cart::getAll($data);
         if($result instanceof Error_) self::badRequest();
 
-        echo json_encode($result);exit;
+        $paramsList = array();
+        foreach($result as $key => $value){
+            array_push($paramsList, [
+                'cart_product_id'   => $value->cart_product_id,
+                'cart_is_parsing'   => $value->cart_is_parsing,
+                'cart_count'        => $value->cart_count,
+            ]);
+        }
+
+        $products = array();
+        
+        foreach($paramsList as $key => $value){
+
+            $idProduct = $value['cart_product_id'];
+            $isParser = $value['cart_is_parsing'];
+            $countProduct = $value['cart_count'];
+
+            if($isParser != 0){
+                $product = \Model\ParsingProduct::get($idProduct);
+            }
+
+            $product->count_cart = $countProduct;
+
+            array_push($products, $product);
+        }
+
+        echo json_encode($products);exit;
 
 	}
 
@@ -47,7 +73,18 @@ class cart extends \API\AController {
         
         $result = \Model\Cart::create($data);
 
-        $product = \Model\Cart::get($result);
+        $cartInfo = \Model\Cart::get($result);
+        $idProduct = $cartInfo->cart_product_id;
+        $isParser = $cartInfo->cart_is_parsing;
+        $countProduct = $cartInfo->cart_count;
+
+        if($isParser != 0){
+            $product = \Model\ParsingProduct::get($idProduct);
+        }
+
+        $product['count'] = $countProduct;
+
+
         echo json_encode($product);exit;
     }
 
