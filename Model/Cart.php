@@ -41,7 +41,7 @@ class Cart extends Model {
 	}
 
 	public static function getAll(array $params=[]) {
-		return parent::getAll();
+		return parent::getAll($params);
 	}
 
     public static function getCount(array $params){
