@@ -141,8 +141,14 @@ class cart extends \API\AController {
             $indexFirstProducts = array_key_first($elemCartList);
             $idCartProduct = $elemCartList[$indexFirstProducts]->cart_id;
             $product = \Model\Cart::get($idCartProduct);
+
             $updateData['cart_count'] = $product->cart_count + $data['cart_count'];
+            $updateData['cart_archive'] = false;
+            $updateData['cart_date_update_archive'] = date('Y-m-d H:i:s');
+
             $product->update($updateData);
+            if($product instanceof Error_) self::internalServerError();
+            $product = \Model\Cart::get($idCartProduct);
 
             $isParser = $product->cart_is_parsing;
             $countProduct = $product->cart_count;
