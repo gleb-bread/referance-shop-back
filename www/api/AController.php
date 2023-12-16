@@ -105,6 +105,11 @@ class AController {
 		return $data;
 	}
 
+	protected static function getParamsWithoutethod(array $data){
+		unset($data['_method']);
+		return $data;
+	}
+
 	protected static function getParams() {
 		$request = [];
 

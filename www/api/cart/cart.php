@@ -22,15 +22,28 @@ class cart extends \API\AController {
     protected static function patch() {
         $data = self::getParams();
         $data = self::getParamsWithoutUserToken($data);
+        $data = self::getParamsWithoutethod($data);
         $idCart = self::$_SPLIT[2];
 
         $cartProduct = \Model\Cart::get($idCart);
         if($cartProduct instanceof Error_) self::badRequest();
-
-        $cartProduct->update($data);
-        if($cartProduct instanceof Error_) self::internalServerError();
         
-        echo json_encode($cartProduct);exit;
+        if($data['cart_count'] != 0){
+            $cartProduct->update($data);
+            if($cartProduct instanceof Error_) self::internalServerError();
+    
+            $cartProduct = \Model\Cart::get($cartProduct->cart_id);
+            $data = self::getCartItem($cartProduct);
+        } else {
+            $data['cart_archive'] = true;
+            $cartProduct->update($data);
+            if($cartProduct instanceof Error_) self::internalServerError();
+
+            $cartProduct = \Model\Cart::get($cartProduct->cart_id);
+            $data = self::getCartItem($cartProduct);
+        }
+        
+        echo json_encode($data);exit;
 
 	}
 
@@ -43,6 +56,7 @@ class cart extends \API\AController {
                 $data = self::getParams();
                 $data = self::getParamsWithoutUserToken($data);
                 $data['cart_uid'] = $userId;
+                $data['cart_archive'] = false;
         
                 $result = \Model\Cart::count($data);
                 if($result instanceof Error_) self::badRequest();
@@ -57,6 +71,7 @@ class cart extends \API\AController {
                 $data = self::getParams();
                 $data = self::getParamsWithoutUserToken($data);
                 $data['cart_uid'] = $userId;
+                $data['cart_archive'] = false;
         
                 $result = \Model\Cart::getAll($data);
                 if($result instanceof Error_) self::badRequest();
@@ -83,6 +98,10 @@ class cart extends \API\AController {
         $data = self::getParams();
         
         $data = self::getParamsWithoutUserToken($data);
+
+        if($data['_method'] === 'patch'){
+            self::patch();
+        }
 
         $data['cart_uid'] = $userId;
         $idProduct = $data['cart_product_id'];
@@ -184,5 +203,23 @@ class cart extends \API\AController {
         }
 
         return $currectProduct;
+    }
+
+    protected static function getCartItem(\Model\Cart $data){
+        $result = array();
+
+        if(self::checkParam($data->cart_uid)) $result['cart_uid'] = $data->cart_uid;
+        if(self::checkParam($data->cart_status_id)) $result['cart_status_id'] = $data->cart_status_id;
+        if(self::checkParam($data->cart_product_id)) $result['cart_product_id'] = $data->cart_product_id;
+        if(self::checkParam($data->cart_order_id)) $result['cart_order_id'] = $data->cart_order_id;
+        $result['cart_is_parsing'] = $data->cart_is_parsing === 0 ? false : true;
+        if(self::checkParam($data->cart_id)) $result['cart_id'] = $data->cart_id;
+        if(self::checkParam($data->cart_date_update_archive)) $result['cart_date_update_archive'] = $data->cart_date_update_archive;
+        if(self::checkParam($data->cart_date)) $result['cart_date'] = $data->cart_date;
+        if(self::checkParam($data->cart_count)) $result['cart_count'] = $data->cart_count;
+        if(self::checkParam($data->cart_comment)) $result['cart_comment'] = $data->cart_comment;
+        $result['cart_archive'] = self::checkParam($data->cart_archive) ? true : false;
+
+        return $result;
     }
 }
