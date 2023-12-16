@@ -36,6 +36,7 @@ class cart extends \API\AController {
             $data = self::getCartItem($cartProduct);
         } else {
             $data['cart_archive'] = true;
+            $data['cart_date_update_archive'] = date('Y-m-d H:i:s');
             $cartProduct->update($data);
             if($cartProduct instanceof Error_) self::internalServerError();
 
