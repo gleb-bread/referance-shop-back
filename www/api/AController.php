@@ -110,6 +110,18 @@ class AController {
 		return $data;
 	}
 
+	protected static function getCurrectDataToCreate($params){
+        $data = array();
+
+        foreach($params as $key => $value){
+            if(self::checkParam($value)){
+                $data[$key] = $value;
+            }
+        }
+
+        return $data;
+    }
+
 	protected static function getParams() {
 		$request = [];
 

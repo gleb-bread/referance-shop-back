@@ -20,31 +20,54 @@ class cart extends \API\AController {
 	}
 
     protected static function patch() {
-        $data = self::getParams();
-        $data = self::getParamsWithoutUserToken($data);
-        $data = self::getParamsWithoutethod($data);
-        $idCart = self::$_SPLIT[2];
+        switch (self::$_SPLIT[2]){
+            case 'drop': {
+                $userId = self::$user->user_id;
 
-        $cartProduct = \Model\Cart::get($idCart);
-        if($cartProduct instanceof Error_) self::badRequest();
+                $filters['cart_uid'] = $userId;
+                $filters['cart_archive'] = false; 
+
+                $cartProduct = \Model\Cart::getAll($filters);
+
+                foreach($cartProduct as $key => $value){
+                    $updateData['cart_count'] = 0;
+                    $updateData['cart_archive'] = true;
+                    $updateData['cart_date_update_archive'] = date('Y-m-d H:i:s');
+
+                    $value->update($updateData);
+                }
+
+                echo json_encode(['success' => true]); exit;
+            }
+
+            default: {
+                $data = self::getParams();
+                $data = self::getParamsWithoutUserToken($data);
+                $data = self::getParamsWithoutethod($data);
+                $idCart = self::$_SPLIT[2];
         
-        if($data['cart_count'] != 0){
-            $cartProduct->update($data);
-            if($cartProduct instanceof Error_) self::internalServerError();
-    
-            $cartProduct = \Model\Cart::get($cartProduct->cart_id);
-            $data = self::getCartItem($cartProduct);
-        } else {
-            $data['cart_archive'] = true;
-            $data['cart_date_update_archive'] = date('Y-m-d H:i:s');
-            $cartProduct->update($data);
-            if($cartProduct instanceof Error_) self::internalServerError();
-
-            $cartProduct = \Model\Cart::get($cartProduct->cart_id);
-            $data = self::getCartItem($cartProduct);
+                $cartProduct = \Model\Cart::get($idCart);
+                if($cartProduct instanceof Error_) self::badRequest();
+                
+                if($data['cart_count'] != 0){
+                    $cartProduct->update($data);
+                    if($cartProduct instanceof Error_) self::internalServerError();
+            
+                    $cartProduct = \Model\Cart::get($cartProduct->cart_id);
+                    $data = self::getCartItem($cartProduct);
+                } else {
+                    $data['cart_archive'] = true;
+                    $data['cart_date_update_archive'] = date('Y-m-d H:i:s');
+                    $cartProduct->update($data);
+                    if($cartProduct instanceof Error_) self::internalServerError();
+        
+                    $cartProduct = \Model\Cart::get($cartProduct->cart_id);
+                    $data = self::getCartItem($cartProduct);
+                }
+                
+                echo json_encode($data);exit;
+            }
         }
-        
-        echo json_encode($data);exit;
 
 	}
 
