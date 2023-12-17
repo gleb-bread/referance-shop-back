@@ -24,7 +24,20 @@ class orders extends \API\AController {
 	}
 
 	protected static function get() {
-       
+        $userId = self::$user->user_id;
+        if($userId instanceof Error_) self::internalServerError();
+        $data = self::getParams();
+        $data = self::getParamsWithoutUserToken($data);
+
+        $filter = [
+            'order_uid' => $userId,
+            'order_archive' => false,
+        ];  
+        
+        $orders = \Model\Order::getAll($filter);
+        if($orders instanceof Error_) self::badRequest();
+
+        echo json_encode($orders);exit;
     }
 
     protected static function post(){
@@ -70,8 +83,6 @@ class orders extends \API\AController {
              "order_price" => $totalPrice,
              "order_price_view" => $totalPriceView
          ];
-         echo json_encode($createData);exit;
- 
          $createData = self::getCurrectDataToCreate($createData);
  
          $newOrderId  = \Model\Order::create($createData);

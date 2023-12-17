@@ -31,6 +31,8 @@ class Order extends Model {
     public $order_price;
     public $order_discount;
     public $order_price_view;
+	public $order_archive;
+	public $order_update_date_archive;
 	
 
 	public static function create($data) {
@@ -55,7 +57,8 @@ class Order extends Model {
 		self::$json_fields = [];
 		self::$numbers_fields = [
 			'order_id', 'order_uid', 'order_price',
-            'order_status_id', 'order_substatus_id', 'order_type_disabled_id'
+            'order_status_id', 'order_substatus_id', 'order_type_disabled_id',
+			'order_archive'
 		];
 		self::$fields = self::setFields();
 	}
