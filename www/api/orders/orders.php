@@ -37,7 +37,10 @@ class orders extends \API\AController {
         $orders = \Model\Order::getAll($filter);
         if($orders instanceof Error_) self::badRequest();
 
+        $orders = self::getCurrectOrdersList($orders);
+
         echo json_encode($orders);exit;
+        
     }
 
     protected static function post(){
@@ -46,7 +49,7 @@ class orders extends \API\AController {
          if($userId instanceof Error_) self::internalServerError();
          $data = self::getParams();
          $data = self::getParamsWithoutUserToken($data);
-         $discount = self::checkParam($data['order_discount']);
+         $discount = self::checkParam($data['order_discount']) ? $data['order_discount'] : false;
  
          $filter = [
              'cart_uid'      => $userId,
@@ -103,5 +106,29 @@ class orders extends \API\AController {
          echo json_encode($order);exit;
     }
 
+    protected static function getCurrectOrdersList($orders){
+        $data = array();
 
-}
+        foreach($orders as $key => $order){
+            $currectOrder = self::getCurrectDataToCreate($order);
+            $filter = [
+                'cart_order_id' => $order->order_id
+            ];
+
+            $carts = \Model\Cart::getAll($filter);
+
+            $currectProducts = array();
+            
+            foreach($carts as $key => $value){
+                $item = self::getCurrectDataToCreate(\Model\ParsingProduct::get($value->cart_product_id));
+                $item['count_cart'] = $value->cart_count;
+                array_push($currectProducts,  $item);
+            }
+
+            $currectOrder['products'] = $currectProducts;
+            array_push($data, $currectOrder);
+        }
+
+        return $data;
+    }
+}   
