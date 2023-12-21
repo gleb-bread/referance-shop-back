@@ -1,6 +1,8 @@
 <?php
 
 namespace API\products;
+
+
 use \Error_\Error_;
 
 class products extends \API\AController {
@@ -33,7 +35,7 @@ class products extends \API\AController {
 				}
 
 				default: {
-					$product = \Model\ParsingProduct::get(self::$_SPLIT[2]);
+					$product = \Model\Products::get(self::$_SPLIT[2]);
 					if($product instanceof Error_) self::badRequest();
 					echo json_encode($product);
 					exit;
@@ -43,7 +45,7 @@ class products extends \API\AController {
 			$data = self::getParams();
 			$data = self::getParamsWithoutUserToken($data);	
 			
-			$products = \Model\ParsingProduct::getAll($data);
+			$products = \Model\Products::getAll($data);
 			if($products instanceof Error_) self::internalServerError();
 			$products = array_values($products);
 			echo json_encode($products);
