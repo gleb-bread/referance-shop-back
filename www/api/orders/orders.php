@@ -49,7 +49,7 @@ class orders extends \API\AController {
          if($userId instanceof Error_) self::internalServerError();
          $data = self::getParams();
          $data = self::getParamsWithoutUserToken($data);
-         $discount = self::checkParam($data['order_discount']) ? $data['order_discount'] : false;
+         $promo_id = self::checkParam($data['promo_id']) ? $data['promo_id'] : false;
  
          $filter = [
              'cart_uid'      => $userId,
@@ -75,35 +75,47 @@ class orders extends \API\AController {
              $totalPrice +=  (int)$value->cart_count * (int)$product->price;
          }
  
-         if($discount){
-             $totalPriceView = $totalPrice * ((int)$discount / 100);
+         if($promo_id){
+            $promo = \Model\Promo::get($promo_id);
+            $totalPriceView = $totalPrice - ($totalPrice * ((int)$promo->promo_discount / 100));
+
+            $filterArr = [
+                'connexion_user_id' => self::$user->user_id,
+                'connexion_promo_id' => $promo->promo_id,
+            ];
+    
+            $newWrite = \Model\PromoUsers::create($filterArr);
+            if($newWrite instanceof Error_) self::internalServerError();
+
          } else {
-             $totalPriceView = $totalPrice;
+            $totalPriceView = $totalPrice;
          }
  
          $createData = [
-             "order_uid" => $userId,
-             "order_price" => $totalPrice,
-             "order_price_view" => $totalPriceView
-         ];
-         $createData = self::getCurrectDataToCreate($createData);
+            "order_uid" => $userId,
+            "order_price" => $totalPrice,
+            "order_price_view" => $totalPriceView,
+            "order_discount" => $promo_id ? $promo->promo_discount : 0,
+        ];
+
+        $createData = self::getCurrectDataToCreate($createData);
  
-         $newOrderId  = \Model\Order::create($createData);
-         if($newOrderId instanceof Error_) self::internalServerError();
-         $order = \Model\Order::get($newOrderId);
-         if($order instanceof Error_) self::internalServerError();
+        $newOrderId  = \Model\Order::create($createData);
+        if($newOrderId instanceof Error_) self::internalServerError();
+        $order = \Model\Order::get($newOrderId);
+        if($order instanceof Error_) self::internalServerError();
+
+        foreach($cartsProducts as $key => $value) {
+            $updateList = [
+                'cart_archive' => true,
+                'cart_order_id' => (int)$newOrderId,
+                'cart_date_update_archive' => date('Y-m-d H:i:s'),
+            ];
+            
+            $value->update($updateList);
+        }
  
-         foreach($cartsProducts as $key => $value) {
-             $updateList = [
-                 'cart_archive' => true,
-                 'cart_order_id' => (int)$newOrderId,
-                 'cart_date_update_archive' => date('Y-m-d H:i:s'),
-             ];
-             
-             $value->update($updateList);
-         }
- 
-         echo json_encode($order);exit;
+        echo json_encode($order);exit;
     }
 
     protected static function getCurrectOrdersList($orders){

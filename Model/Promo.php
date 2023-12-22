@@ -36,7 +36,7 @@ class Promo extends Model {
 	}
 
 	public static function getAll(array $params=[]) {
-		return parent::getAll();
+		return parent::getAll($params);
 	}
 
 	public static function __init__() {

@@ -19,10 +19,38 @@ class promo extends \API\AController {
 	}
 
     protected static function get(){
-        $promos = \Model\Promo::getAll();
-        if($promos instanceof Error_) self::internalServerError();
+        if(self::checkParam(self::$_SPLIT[2])){
+            $idUser = self::$user->user_id;
+            $filter = [
+                'promo_code' => self::$_SPLIT[2],
+                'promo_archive' => 0,
+            ];
+            $promo = \Model\Promo::getAll($filter);
+            if(empty($promo)){
+                echo json_encode(['success' => false, 'message' => 'Не существует такого промо-кода']);exit;
+            }
 
-        echo json_encode(array_values($promos));exit;
+            $indexFirstPromo = array_key_first($promo);
+            $discountPromo = $promo[$indexFirstPromo]->promo_id;
+        
+            $filterArr = [
+                'connexion_user_id' => $idUser,
+                'connexion_promo_id' => $discountPromo,
+            ];
+        
+            $checkCountPromoActive = \Model\PromoUsers::count($filterArr);
+        
+            if($checkCountPromoActive != 0){
+                echo json_encode(['success' => false, 'message' => 'Вы уже использовали промо-код']);exit;
+            }
+
+            echo json_encode(['success' => true, 'promo_id' => $discountPromo]);exit;
+        } else {
+            $promos = \Model\Promo::getAll();
+            if($promos instanceof Error_) self::internalServerError();
+
+            echo json_encode(array_values($promos));exit;
+        }
     }
 	
     protected static function patch(){
