@@ -8,10 +8,10 @@ class promo extends \API\AController {
 	protected static $_SPLIT;
 	protected static \Model\User $user;
 	protected static $method;
-	protected static $supportedMethods = ['GET' ,'PATCH', 'POST'];
+	protected static $supportedMethods = ['GET', 'POST'];
 
 	protected static function _main() {
-		if(self::$method == "PATCH") self::patch();
+		//if(self::$method == "PATCH") self::patch();
         if(self::$method == "POST") self::post();
         if(self::$method == "GET") self::get();
 		
@@ -67,6 +67,10 @@ class promo extends \API\AController {
                 $data = self::getParams();
                 $data = self::getParamsWithoutUserToken($data);	
                 $idUser = self::$user->user_id;
+
+                if($data['method'] === 'patch'){
+                    self::patch();
+                }
         
                 $promos = \Model\Promo::getAll($data);
         

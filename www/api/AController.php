@@ -12,7 +12,7 @@ class AController {
 	public static function main($_SPLIT) {
 		static::$_SPLIT = $_SPLIT;
 		$data = self::getParams();
-
+		
 		$user = \Model\User::getByField('user_token', [$data['user_token']]);
 		if($user instanceof \Error_\Error_) self::unauthorized();
 		if(!$user) $user = \Model\User::create($data);
